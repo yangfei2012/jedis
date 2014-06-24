@@ -27,10 +27,10 @@ public final class RedisOutputStream extends FilterOutputStream {
     }
 
     private void flushBuffer() throws IOException {
-	if (count > 0) {
-	    out.write(buf, 0, count);
-	    count = 0;
-	}
+        if (count > 0) {
+            out.write(buf, 0, count);
+            count = 0;
+        }
     }
 
     public void write(final byte b) throws IOException {
@@ -220,7 +220,7 @@ public final class RedisOutputStream extends FilterOutputStream {
     }
 
     public void flush() throws IOException {
-	flushBuffer();
-	out.flush();
+	    flushBuffer();
+	    out.flush();
     }
 }

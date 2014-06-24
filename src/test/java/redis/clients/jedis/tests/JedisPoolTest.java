@@ -1,18 +1,13 @@
 package redis.clients.jedis.tests;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Assert;
 import org.junit.Test;
-
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Transaction;
+import redis.clients.jedis.*;
 import redis.clients.jedis.exceptions.JedisConnectionException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class JedisPoolTest extends Assert {
     private static HostAndPort hnp = HostAndPortUtil.getRedisServers().get(0);
@@ -60,18 +55,18 @@ public class JedisPoolTest extends Assert {
 
     @Test
     public void checkPoolRepairedWhenJedisIsBroken() {
-	JedisPool pool = new JedisPool(new JedisPoolConfig(), hnp.getHost(),
-		hnp.getPort());
-	Jedis jedis = pool.getResource();
-	jedis.auth("foobared");
-	jedis.quit();
-	pool.returnBrokenResource(jedis);
+        JedisPool pool = new JedisPool(new JedisPoolConfig(), hnp.getHost(),
+                hnp.getPort());
+        Jedis jedis = pool.getResource();
+        jedis.auth("foobared");
+        jedis.quit();
+        pool.returnBrokenResource(jedis);
 
-	jedis = pool.getResource();
-	jedis.auth("foobared");
-	jedis.incr("foo");
-	pool.returnResource(jedis);
-	pool.destroy();
+        jedis = pool.getResource();
+        jedis.auth("foobared");
+        jedis.incr("foo");
+        pool.returnResource(jedis);
+        pool.destroy();
     }
 
     @Test(expected = JedisConnectionException.class)

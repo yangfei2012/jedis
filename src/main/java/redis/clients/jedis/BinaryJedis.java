@@ -124,9 +124,9 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands,
      * Ask the server to silently close the connection.
      */
     public String quit() {
-	checkIsInMulti();
-	client.quit();
-	return client.getStatusCodeReply();
+        checkIsInMulti();
+        client.quit();
+        return client.getStatusCodeReply();
     }
 
     /**
@@ -1788,15 +1788,15 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands,
     }
 
     public void resetState() {
-	if (client.isConnected()) {
-	    client.resetState();
-	    client.getAll();
-	}
+        if (client.isConnected()) {
+            client.resetState();
+            client.getAll();
+        }
     }
 
     public String watch(final byte[]... keys) {
-	client.watch(keys);
-	return client.getStatusCodeReply();
+	    client.watch(keys);
+	    return client.getStatusCodeReply();
     }
 
     public String unwatch() {

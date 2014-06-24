@@ -1,5 +1,12 @@
 package redis.clients.jedis;
 
+import redis.clients.jedis.Protocol.Command;
+import redis.clients.jedis.exceptions.JedisConnectionException;
+import redis.clients.jedis.exceptions.JedisDataException;
+import redis.clients.util.RedisInputStream;
+import redis.clients.util.RedisOutputStream;
+import redis.clients.util.SafeEncoder;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,13 +14,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-
-import redis.clients.jedis.Protocol.Command;
-import redis.clients.jedis.exceptions.JedisConnectionException;
-import redis.clients.jedis.exceptions.JedisDataException;
-import redis.clients.util.RedisInputStream;
-import redis.clients.util.RedisOutputStream;
-import redis.clients.util.SafeEncoder;
 
 public class Connection implements Closeable {
     private String host;
@@ -123,33 +123,32 @@ public class Connection implements Closeable {
     }
 
     public Connection() {
-
     }
 
     public void connect() {
-	if (!isConnected()) {
-	    try {
-		socket = new Socket();
-		// ->@wjw_add
-		socket.setReuseAddress(true);
-		socket.setKeepAlive(true); // Will monitor the TCP connection is
-					   // valid
-		socket.setTcpNoDelay(true); // Socket buffer Whetherclosed, to
-					    // ensure timely delivery of data
-		socket.setSoLinger(true, 0); // Control calls close () method,
-					     // the underlying socket is closed
-					     // immediately
-		// <-@wjw_add
+        if (!isConnected()) {
+            try {
+                socket = new Socket();
+                // ->@wjw_add
+                socket.setReuseAddress(true);
+                socket.setKeepAlive(true); // Will monitor the TCP connection is
+                               // valid
+                socket.setTcpNoDelay(true); // Socket buffer Whetherclosed, to
+                                // ensure timely delivery of data
+                socket.setSoLinger(true, 0); // Control calls close () method,
+                                 // the underlying socket is closed
+                                 // immediately
+                // <-@wjw_add
 
-		socket.connect(new InetSocketAddress(host, port), timeout);
-		socket.setSoTimeout(timeout);
-		outputStream = new RedisOutputStream(socket.getOutputStream());
-		inputStream = new RedisInputStream(socket.getInputStream());
-	    } catch (IOException ex) {
-		broken = true;
-		throw new JedisConnectionException(ex);
-	    }
-	}
+                socket.connect(new InetSocketAddress(host, port), timeout);
+                socket.setSoTimeout(timeout);
+                outputStream = new RedisOutputStream(socket.getOutputStream());
+                inputStream = new RedisInputStream(socket.getInputStream());
+            } catch (IOException ex) {
+                broken = true;
+                throw new JedisConnectionException(ex);
+            }
+        }
     }
 
     @Override
@@ -179,29 +178,29 @@ public class Connection implements Closeable {
     }
 
     protected String getStatusCodeReply() {
-	flush();
-	pipelinedCommands--;
-	final byte[] resp = (byte[]) readProtocolWithCheckingBroken();
-	if (null == resp) {
-	    return null;
-	} else {
-	    return SafeEncoder.encode(resp);
-	}
+        flush();
+        pipelinedCommands--;
+        final byte[] resp = (byte[]) readProtocolWithCheckingBroken();
+        if (null == resp) {
+            return null;
+        } else {
+            return SafeEncoder.encode(resp);
+        }
     }
 
     public String getBulkReply() {
-	final byte[] result = getBinaryBulkReply();
-	if (null != result) {
-	    return SafeEncoder.encode(result);
-	} else {
-	    return null;
-	}
+        final byte[] result = getBinaryBulkReply();
+        if (null != result) {
+            return SafeEncoder.encode(result);
+        } else {
+            return null;
+        }
     }
 
     public byte[] getBinaryBulkReply() {
-	flush();
-	pipelinedCommands--;
-	return (byte[]) readProtocolWithCheckingBroken();
+	    flush();
+	    pipelinedCommands--;
+	    return (byte[]) readProtocolWithCheckingBroken();
     }
 
     public Long getIntegerReply() {
@@ -244,21 +243,21 @@ public class Connection implements Closeable {
     }
 
     public List<Object> getAll() {
-	return getAll(0);
+	    return getAll(0);
     }
 
     public List<Object> getAll(int except) {
-	List<Object> all = new ArrayList<Object>();
-	flush();
-	while (pipelinedCommands > except) {
-	    try {
-		all.add(readProtocolWithCheckingBroken());
-	    } catch (JedisDataException e) {
-		all.add(e);
-	    }
-	    pipelinedCommands--;
-	}
-	return all;
+        List<Object> all = new ArrayList<Object>();
+        flush();
+        while (pipelinedCommands > except) {
+            try {
+                all.add(readProtocolWithCheckingBroken());
+            } catch (JedisDataException e) {
+                all.add(e);
+            }
+            pipelinedCommands--;
+        }
+        return all;
     }
 
     public Object getOne() {
@@ -268,24 +267,24 @@ public class Connection implements Closeable {
     }
 
     public boolean isBroken() {
-	return broken;
+	    return broken;
     }
 
     protected void flush() {
-	try {
-	    outputStream.flush();
-	} catch (IOException ex) {
-	    broken = true;
-	    throw new JedisConnectionException(ex);
-	}
+        try {
+            outputStream.flush();
+        } catch (IOException ex) {
+            broken = true;
+            throw new JedisConnectionException(ex);
+        }
     }
 
     protected Object readProtocolWithCheckingBroken() {
-	try {
-	    return Protocol.read(inputStream);
-	} catch (JedisConnectionException exc) {
-	    broken = true;
-	    throw exc;
-	}
+        try {
+            return Protocol.read(inputStream);
+        } catch (JedisConnectionException exc) {
+            broken = true;
+            throw exc;
+        }
     }
 }

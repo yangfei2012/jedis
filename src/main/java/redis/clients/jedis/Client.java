@@ -122,7 +122,7 @@ public class Client extends BinaryClient implements Commands {
     }
 
     public void incrBy(final String key, final long integer) {
-	incrBy(SafeEncoder.encode(key), integer);
+	    incrBy(SafeEncoder.encode(key), integer);
     }
 
     public void incr(final String key) {

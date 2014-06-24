@@ -37,51 +37,51 @@ public class BinaryClient extends Connection {
     private boolean isInWatch;
 
     public boolean isInMulti() {
-	return isInMulti;
+	    return isInMulti;
     }
 
     public boolean isInWatch() {
-	return isInWatch;
+	    return isInWatch;
     }
 
     public BinaryClient(final String host) {
-	super(host);
+	    super(host);
     }
 
     public BinaryClient(final String host, final int port) {
-	super(host, port);
+	    super(host, port);
     }
 
     private byte[][] joinParameters(byte[] first, byte[][] rest) {
-	byte[][] result = new byte[rest.length + 1][];
-	result[0] = first;
-	for (int i = 0; i < rest.length; i++) {
-	    result[i + 1] = rest[i];
-	}
-	return result;
+        byte[][] result = new byte[rest.length + 1][];
+        result[0] = first;
+        for (int i = 0; i < rest.length; i++) {
+            result[i + 1] = rest[i];
+        }
+        return result;
     }
 
     public void setPassword(final String password) {
-	this.password = password;
+	    this.password = password;
     }
 
     @Override
     public void connect() {
-	if (!isConnected()) {
-	    super.connect();
-	    if (password != null) {
-		auth(password);
-		getStatusCodeReply();
-	    }
-	    if (db > 0) {
-		select(Long.valueOf(db).intValue());
-		getStatusCodeReply();
-	    }
-	}
+        if (!isConnected()) {
+            super.connect();
+            if (password != null) {
+                auth(password);
+                getStatusCodeReply();
+            }
+            if (db > 0) {
+                select(Long.valueOf(db).intValue());
+                getStatusCodeReply();
+            }
+        }
     }
 
     public void ping() {
-	sendCommand(Command.PING);
+	    sendCommand(Command.PING);
     }
 
     public void set(final byte[] key, final byte[] value) {
@@ -98,8 +98,8 @@ public class BinaryClient extends Connection {
     }
 
     public void quit() {
-	db = 0;
-	sendCommand(QUIT);
+        db = 0;
+        sendCommand(QUIT);
     }
 
     public void exists(final byte[] key) {
@@ -196,7 +196,7 @@ public class BinaryClient extends Connection {
     }
 
     public void incrBy(final byte[] key, final long integer) {
-	sendCommand(INCRBY, key, toByteArray(integer));
+	    sendCommand(INCRBY, key, toByteArray(integer));
     }
 
     public void incrByFloat(final byte[] key, final double value) {
@@ -958,16 +958,16 @@ public class BinaryClient extends Connection {
 
     @Override
     public void close() {
-	db = 0;
-	super.close();
+        db = 0;
+        super.close();
     }
 
     public void resetState() {
-	if (isInMulti())
-	    discard();
+        if (isInMulti())
+            discard();
 
-	if (isInWatch())
-	    unwatch();
+        if (isInWatch())
+            unwatch();
     }
 
     private void sendEvalCommand(Command command, byte[] script,
@@ -1260,7 +1260,7 @@ public class BinaryClient extends Connection {
     }
 
     public void asking() {
-	sendCommand(Command.ASKING);
+	    sendCommand(Command.ASKING);
     }
     
     public void pfadd(final byte[] key, final byte[]... elements) {

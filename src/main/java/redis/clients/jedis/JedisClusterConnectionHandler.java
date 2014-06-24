@@ -1,10 +1,10 @@
 package redis.clients.jedis;
 
-import java.util.*;
-
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.util.ClusterNodeInformation;
 import redis.clients.util.ClusterNodeInformationParser;
+
+import java.util.*;
 
 public abstract class JedisClusterConnectionHandler {
     public static ClusterNodeInformationParser nodeInfoParser = new ClusterNodeInformationParser();
@@ -15,13 +15,13 @@ public abstract class JedisClusterConnectionHandler {
     abstract Jedis getConnection();
 
     protected void returnConnection(Jedis connection) {
-	nodes.get(getNodeKey(connection.getClient()))
-		.returnResource(connection);
+	    nodes.get(getNodeKey(connection.getClient()))
+                .returnResource(connection);
     }
 
     public void returnBrokenConnection(Jedis connection) {
-	nodes.get(getNodeKey(connection.getClient())).returnBrokenResource(
-		connection);
+	    nodes.get(getNodeKey(connection.getClient()))
+                .returnBrokenResource(connection);
     }
 
     abstract Jedis getConnectionFromSlot(int slot);

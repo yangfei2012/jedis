@@ -1,17 +1,13 @@
 package redis.clients.jedis;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import redis.clients.jedis.exceptions.JedisAskDataException;
-import redis.clients.jedis.exceptions.JedisClusterException;
-import redis.clients.jedis.exceptions.JedisConnectionException;
-import redis.clients.jedis.exceptions.JedisDataException;
-import redis.clients.jedis.exceptions.JedisMovedDataException;
+import redis.clients.jedis.exceptions.*;
 import redis.clients.util.RedisInputStream;
 import redis.clients.util.RedisOutputStream;
 import redis.clients.util.SafeEncoder;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Protocol {
 
@@ -68,29 +64,30 @@ public final class Protocol {
     }
 
     public static void sendCommand(final RedisOutputStream os,
-	    final Command command, final byte[]... args) {
-	sendCommand(os, command.raw, args);
+                                   final Command command,
+                                   final byte[]... args) {
+	    sendCommand(os, command.raw, args);
     }
 
     private static void sendCommand(final RedisOutputStream os,
 	    final byte[] command, final byte[]... args) {
-	try {
-	    os.write(ASTERISK_BYTE);
-	    os.writeIntCrLf(args.length + 1);
-	    os.write(DOLLAR_BYTE);
-	    os.writeIntCrLf(command.length);
-	    os.write(command);
-	    os.writeCrLf();
+        try {
+            os.write(ASTERISK_BYTE);
+            os.writeIntCrLf(args.length + 1);
+            os.write(DOLLAR_BYTE);
+            os.writeIntCrLf(command.length);
+            os.write(command);
+            os.writeCrLf();
 
-	    for (final byte[] arg : args) {
-		os.write(DOLLAR_BYTE);
-		os.writeIntCrLf(arg.length);
-		os.write(arg);
-		os.writeCrLf();
-	    }
-	} catch (IOException e) {
-	    throw new JedisConnectionException(e);
-	}
+            for (final byte[] arg : args) {
+                os.write(DOLLAR_BYTE);
+                os.writeIntCrLf(arg.length);
+                os.write(arg);
+                os.writeCrLf();
+            }
+        } catch (IOException e) {
+            throw new JedisConnectionException(e);
+        }
     }
 
     private static void processError(final RedisInputStream is) {
@@ -217,21 +214,44 @@ public final class Protocol {
     }
 
     public static enum Command {
-	PING, SET, GET, QUIT, EXISTS, DEL, TYPE, FLUSHDB, KEYS, RANDOMKEY, RENAME, RENAMENX, RENAMEX, DBSIZE, EXPIRE, EXPIREAT, TTL, SELECT, MOVE, FLUSHALL, GETSET, MGET, SETNX, SETEX, MSET, MSETNX, DECRBY, DECR, INCRBY, INCR, APPEND, SUBSTR, HSET, HGET, HSETNX, HMSET, HMGET, HINCRBY, HEXISTS, HDEL, HLEN, HKEYS, HVALS, HGETALL, RPUSH, LPUSH, LLEN, LRANGE, LTRIM, LINDEX, LSET, LREM, LPOP, RPOP, RPOPLPUSH, SADD, SMEMBERS, SREM, SPOP, SMOVE, SCARD, SISMEMBER, SINTER, SINTERSTORE, SUNION, SUNIONSTORE, SDIFF, SDIFFSTORE, SRANDMEMBER, ZADD, ZRANGE, ZREM, ZINCRBY, ZRANK, ZREVRANK, ZREVRANGE, ZCARD, ZSCORE, MULTI, DISCARD, EXEC, WATCH, UNWATCH, SORT, BLPOP, BRPOP, AUTH, SUBSCRIBE, PUBLISH, UNSUBSCRIBE, PSUBSCRIBE, PUNSUBSCRIBE, PUBSUB, ZCOUNT, ZRANGEBYSCORE, ZREVRANGEBYSCORE, ZREMRANGEBYRANK, ZREMRANGEBYSCORE, ZUNIONSTORE, ZINTERSTORE, SAVE, BGSAVE, BGREWRITEAOF, LASTSAVE, SHUTDOWN, INFO, MONITOR, SLAVEOF, CONFIG, STRLEN, SYNC, LPUSHX, PERSIST, RPUSHX, ECHO, LINSERT, DEBUG, BRPOPLPUSH, SETBIT, GETBIT, BITPOS, SETRANGE, GETRANGE, EVAL, EVALSHA, SCRIPT, SLOWLOG, OBJECT, BITCOUNT, BITOP, SENTINEL, DUMP, RESTORE, PEXPIRE, PEXPIREAT, PTTL, INCRBYFLOAT, PSETEX, CLIENT, TIME, MIGRATE, HINCRBYFLOAT, SCAN, HSCAN, SSCAN, ZSCAN, WAIT, CLUSTER, ASKING, PFADD, PFCOUNT, PFMERGE;
+	    PING, SET, GET, QUIT, EXISTS, DEL, TYPE,
+        FLUSHDB, KEYS, RANDOMKEY, RENAME, RENAMENX,
+        RENAMEX, DBSIZE, EXPIRE, EXPIREAT, TTL, SELECT,
+        MOVE, FLUSHALL, GETSET, MGET, SETNX, SETEX, MSET,
+        MSETNX, DECRBY, DECR, INCRBY, INCR, APPEND, SUBSTR,
+        HSET, HGET, HSETNX, HMSET, HMGET, HINCRBY, HEXISTS,
+        HDEL, HLEN, HKEYS, HVALS, HGETALL, RPUSH, LPUSH,
+        LLEN, LRANGE, LTRIM, LINDEX, LSET, LREM, LPOP, RPOP,
+        RPOPLPUSH, SADD, SMEMBERS, SREM, SPOP, SMOVE, SCARD,
+        SISMEMBER, SINTER, SINTERSTORE, SUNION, SUNIONSTORE,
+        SDIFF, SDIFFSTORE, SRANDMEMBER, ZADD, ZRANGE, ZREM,
+        ZINCRBY, ZRANK, ZREVRANK, ZREVRANGE, ZCARD, ZSCORE,
+        MULTI, DISCARD, EXEC, WATCH, UNWATCH, SORT, BLPOP,
+        BRPOP, AUTH, SUBSCRIBE, PUBLISH, UNSUBSCRIBE, PSUBSCRIBE,
+        PUNSUBSCRIBE, PUBSUB, ZCOUNT, ZRANGEBYSCORE, ZREVRANGEBYSCORE,
+        ZREMRANGEBYRANK, ZREMRANGEBYSCORE, ZUNIONSTORE, ZINTERSTORE,
+        SAVE, BGSAVE, BGREWRITEAOF, LASTSAVE, SHUTDOWN, INFO,
+        MONITOR, SLAVEOF, CONFIG, STRLEN, SYNC, LPUSHX, PERSIST,
+        RPUSHX, ECHO, LINSERT, DEBUG, BRPOPLPUSH, SETBIT, GETBIT,
+        BITPOS, SETRANGE, GETRANGE, EVAL, EVALSHA, SCRIPT, SLOWLOG,
+        OBJECT, BITCOUNT, BITOP, SENTINEL, DUMP, RESTORE, PEXPIRE,
+        PEXPIREAT, PTTL, INCRBYFLOAT, PSETEX, CLIENT, TIME, MIGRATE,
+        HINCRBYFLOAT, SCAN, HSCAN, SSCAN, ZSCAN, WAIT, CLUSTER, ASKING,
+        PFADD, PFCOUNT, PFMERGE;
 
-	public final byte[] raw;
+	    public final byte[] raw;
 
-	Command() {
-	    raw = SafeEncoder.encode(this.name());
-	}
+        Command() {
+            raw = SafeEncoder.encode(this.name());
+        }
     }
 
     public static enum Keyword {
-	AGGREGATE, ALPHA, ASC, BY, DESC, GET, LIMIT, MESSAGE, NO, NOSORT, PMESSAGE, PSUBSCRIBE, PUNSUBSCRIBE, OK, ONE, QUEUED, SET, STORE, SUBSCRIBE, UNSUBSCRIBE, WEIGHTS, WITHSCORES, RESETSTAT, RESET, FLUSH, EXISTS, LOAD, KILL, LEN, REFCOUNT, ENCODING, IDLETIME, AND, OR, XOR, NOT, GETNAME, SETNAME, LIST, MATCH, COUNT;
-	public final byte[] raw;
+    	AGGREGATE, ALPHA, ASC, BY, DESC, GET, LIMIT, MESSAGE, NO, NOSORT, PMESSAGE, PSUBSCRIBE, PUNSUBSCRIBE, OK, ONE, QUEUED, SET, STORE, SUBSCRIBE, UNSUBSCRIBE, WEIGHTS, WITHSCORES, RESETSTAT, RESET, FLUSH, EXISTS, LOAD, KILL, LEN, REFCOUNT, ENCODING, IDLETIME, AND, OR, XOR, NOT, GETNAME, SETNAME, LIST, MATCH, COUNT;
+	    public final byte[] raw;
 
-	Keyword() {
-	    raw = SafeEncoder.encode(this.name().toLowerCase());
-	}
+        Keyword() {
+            raw = SafeEncoder.encode(this.name().toLowerCase());
+        }
     }
 }

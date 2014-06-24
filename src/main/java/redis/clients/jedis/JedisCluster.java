@@ -254,13 +254,13 @@ public class JedisCluster implements JedisCommands, BasicCommands {
 
     @Override
     public Long incrBy(final String key, final long integer) {
-	return new JedisClusterCommand<Long>(connectionHandler, timeout,
-		maxRedirections) {
-	    @Override
-	    public Long execute(Jedis connection) {
-		return connection.incrBy(key, integer);
-	    }
-	}.run(key);
+        return new JedisClusterCommand<Long>(connectionHandler, timeout,
+            maxRedirections) {
+            @Override
+            public Long execute(Jedis connection) {
+                return connection.incrBy(key, integer);
+            }
+        }.run(key);
     }
 
     @Override
@@ -276,13 +276,13 @@ public class JedisCluster implements JedisCommands, BasicCommands {
 
     @Override
     public Long append(final String key, final String value) {
-	return new JedisClusterCommand<Long>(connectionHandler, timeout,
-		maxRedirections) {
-	    @Override
-	    public Long execute(Jedis connection) {
-		return connection.append(key, value);
-	    }
-	}.run(key);
+        return new JedisClusterCommand<Long>(connectionHandler, timeout,
+            maxRedirections) {
+            @Override
+            public Long execute(Jedis connection) {
+                return connection.append(key, value);
+            }
+        }.run(key);
     }
 
     @Override

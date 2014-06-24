@@ -539,9 +539,9 @@ public class Jedis extends BinaryJedis implements JedisCommands,
      *         after the increment.
      */
     public Long incrBy(final String key, final long integer) {
-	checkIsInMulti();
-	client.incrBy(key, integer);
-	return client.getIntegerReply();
+	    checkIsInMulti();
+	    client.incrBy(key, integer);
+	    return client.getIntegerReply();
     }
 
     /**
@@ -1529,10 +1529,10 @@ public class Jedis extends BinaryJedis implements JedisCommands,
      */
     public Double zincrby(final String key, final double score,
 	    final String member) {
-	checkIsInMulti();
-	client.zincrby(key, score, member);
-	String newscore = client.getBulkReply();
-	return Double.valueOf(newscore);
+        checkIsInMulti();
+        client.zincrby(key, score, member);
+        String newscore = client.getBulkReply();
+        return Double.valueOf(newscore);
     }
 
     /**
@@ -3491,9 +3491,9 @@ public class Jedis extends BinaryJedis implements JedisCommands,
     }
 
     public String asking() {
-	checkIsInMulti();
-	client.asking();
-	return client.getStatusCodeReply();
+	    checkIsInMulti();
+	    client.asking();
+	    return client.getStatusCodeReply();
     }
 
     public List<String> pubsubChannels(String pattern) {
@@ -3517,15 +3517,15 @@ public class Jedis extends BinaryJedis implements JedisCommands,
 
     @Override
     public void close() {
-	if (dataSource != null) {
-	    if (client.isBroken()) {
-		this.dataSource.returnBrokenResource(this);
-	    } else {
-		this.dataSource.returnResource(this);
-	    }
-	} else {
-	    client.close();
-	}
+        if (dataSource != null) {
+            if (client.isBroken()) {
+                this.dataSource.returnBrokenResource(this);
+            } else {
+                this.dataSource.returnResource(this);
+            }
+        } else {
+            client.close();
+        }
     }
 
     public void setDataSource(Pool<Jedis> jedisPool) {
