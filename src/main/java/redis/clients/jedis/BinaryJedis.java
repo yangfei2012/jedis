@@ -629,9 +629,9 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands,
      *         after the increment.
      */
     public Long incrBy(final byte[] key, final long integer) {
-	checkIsInMulti();
-	client.incrBy(key, integer);
-	return client.getIntegerReply();
+        checkIsInMulti();
+        client.incrBy(key, integer);
+        return client.getIntegerReply();
     }
 
     /**

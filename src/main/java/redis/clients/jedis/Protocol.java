@@ -70,7 +70,8 @@ public final class Protocol {
     }
 
     private static void sendCommand(final RedisOutputStream os,
-	    final byte[] command, final byte[]... args) {
+                                    final byte[] command,
+                                    final byte[]... args) {
         try {
             os.write(ASTERISK_BYTE);
             os.writeIntCrLf(args.length + 1);
@@ -122,79 +123,78 @@ public final class Protocol {
     }
 
     private static Object process(final RedisInputStream is) {
-	try {
-	    byte b = is.readByte();
-	    if (b == MINUS_BYTE) {
-		processError(is);
-	    } else if (b == ASTERISK_BYTE) {
-		return processMultiBulkReply(is);
-	    } else if (b == COLON_BYTE) {
-		return processInteger(is);
-	    } else if (b == DOLLAR_BYTE) {
-		return processBulkReply(is);
-	    } else if (b == PLUS_BYTE) {
-		return processStatusCodeReply(is);
-	    } else {
-		throw new JedisConnectionException("Unknown reply: " + (char) b);
-	    }
-	} catch (IOException e) {
-	    throw new JedisConnectionException(e);
-	}
-	return null;
+        try {
+            byte b = is.readByte();
+            if (b == MINUS_BYTE) {
+                processError(is);
+            } else if (b == ASTERISK_BYTE) {
+                return processMultiBulkReply(is);
+            } else if (b == COLON_BYTE) {
+                return processInteger(is);
+            } else if (b == DOLLAR_BYTE) {
+                return processBulkReply(is);
+            } else if (b == PLUS_BYTE) {
+                return processStatusCodeReply(is);
+            } else {
+                throw new JedisConnectionException("Unknown reply: " + (char) b);
+            }
+        } catch (IOException e) {
+            throw new JedisConnectionException(e);
+        }
+        return null;
     }
 
     private static byte[] processStatusCodeReply(final RedisInputStream is) {
-	return SafeEncoder.encode(is.readLine());
+	    return SafeEncoder.encode(is.readLine());
     }
 
     private static byte[] processBulkReply(final RedisInputStream is) {
-	int len = Integer.parseInt(is.readLine());
-	if (len == -1) {
-	    return null;
-	}
-	byte[] read = new byte[len];
-	int offset = 0;
-	try {
-	    while (offset < len) {
-		int size = is.read(read, offset, (len - offset));
-		if (size == -1)
-		    throw new JedisConnectionException(
-			    "It seems like server has closed the connection.");
-		offset += size;
-	    }
-	    // read 2 more bytes for the command delimiter
-	    is.readByte();
-	    is.readByte();
-	} catch (IOException e) {
-	    throw new JedisConnectionException(e);
-	}
+        int len = Integer.parseInt(is.readLine());
+        if (len == -1) {
+            return null;
+        }
+        byte[] read = new byte[len];
+        int offset = 0;
+        try {
+            while (offset < len) {
+                int size = is.read(read, offset, (len-offset));
+                if (size == -1)
+                    throw new JedisConnectionException("It seems like server has closed the connection.");
+                offset += size;
+            }
+            // read 2 more bytes for the command delimiter
+            is.readByte();
+            is.readByte();
+        } catch (IOException e) {
+            throw new JedisConnectionException(e);
+        }
 
-	return read;
+        return read;
     }
 
     private static Long processInteger(final RedisInputStream is) {
-	String num = is.readLine();
-	return Long.valueOf(num);
+	    String num = is.readLine();
+	    return Long.valueOf(num);
     }
 
     private static List<Object> processMultiBulkReply(final RedisInputStream is) {
-	int num = Integer.parseInt(is.readLine());
-	if (num == -1) {
-	    return null;
-	}
-	List<Object> ret = new ArrayList<Object>(num);
-	for (int i = 0; i < num; i++) {
-	    try {
-		ret.add(process(is));
-	    } catch (JedisDataException e) {
-		ret.add(e);
-	    }
-	}
-	return ret;
+        int num = Integer.parseInt(is.readLine());
+        if (num == -1) {
+            return null;
+        }
+        List<Object> ret = new ArrayList<Object>(num);
+        for (int i = 0; i < num; i++) {
+            try {
+                ret.add(process(is));
+            } catch (JedisDataException e) {
+                ret.add(e);
+            }
+        }
+        return ret;
     }
 
     public static Object read(final RedisInputStream is) {
-	return process(is);
+	    return process(is);
     }
 
     public static final byte[] toByteArray(final boolean value) {

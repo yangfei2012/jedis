@@ -67,37 +67,37 @@ public class Connection implements Closeable {
     }
 
     protected Connection sendCommand(final Command cmd, final String... args) {
-	final byte[][] bargs = new byte[args.length][];
-	for (int i = 0; i < args.length; i++) {
-	    bargs[i] = SafeEncoder.encode(args[i]);
-	}
-	return sendCommand(cmd, bargs);
+        final byte[][] bargs = new byte[args.length][];
+        for (int i = 0; i < args.length; i++) {
+            bargs[i] = SafeEncoder.encode(args[i]);
+        }
+        return sendCommand(cmd, bargs);
     }
 
     protected Connection sendCommand(final Command cmd, final byte[]... args) {
-	try {
-	    connect();
-	    Protocol.sendCommand(outputStream, cmd, args);
-	    pipelinedCommands++;
-	    return this;
-	} catch (JedisConnectionException ex) {
-	    // Any other exceptions related to connection?
-	    broken = true;
-	    throw ex;
-	}
+        try {
+            connect();
+            Protocol.sendCommand(outputStream, cmd, args);
+            pipelinedCommands++;
+            return this;
+        } catch (JedisConnectionException ex) {
+            // Any other exceptions related to connection?
+            broken = true;
+            throw ex;
+        }
     }
 
     protected Connection sendCommand(final Command cmd) {
-	try {
-	    connect();
-	    Protocol.sendCommand(outputStream, cmd, new byte[0][]);
-	    pipelinedCommands++;
-	    return this;
-	} catch (JedisConnectionException ex) {
-	    // Any other exceptions related to connection?
-	    broken = true;
-	    throw ex;
-	}
+        try {
+            connect();
+            Protocol.sendCommand(outputStream, cmd, new byte[0][]);
+            pipelinedCommands++;
+            return this;
+        } catch (JedisConnectionException ex) {
+            // Any other exceptions related to connection?
+            broken = true;
+            throw ex;
+        }
     }
 
     public Connection(final String host, final int port) {
@@ -153,22 +153,22 @@ public class Connection implements Closeable {
 
     @Override
     public void close() {
-	disconnect();
+	    disconnect();
     }
 
     public void disconnect() {
-	if (isConnected()) {
-	    try {
-		inputStream.close();
-		outputStream.close();
-		if (!socket.isClosed()) {
-		    socket.close();
-		}
-	    } catch (IOException ex) {
-		broken = true;
-		throw new JedisConnectionException(ex);
-	    }
-	}
+        if (isConnected()) {
+            try {
+                inputStream.close();
+                outputStream.close();
+                if (!socket.isClosed()) {
+                    socket.close();
+                }
+            } catch (IOException ex) {
+                broken = true;
+                throw new JedisConnectionException(ex);
+            }
+        }
     }
 
     public boolean isConnected() {
@@ -204,13 +204,13 @@ public class Connection implements Closeable {
     }
 
     public Long getIntegerReply() {
-	flush();
-	pipelinedCommands--;
-	return (Long) readProtocolWithCheckingBroken();
+        flush();
+        pipelinedCommands--;
+        return (Long) readProtocolWithCheckingBroken();
     }
 
     public List<String> getMultiBulkReply() {
-	return BuilderFactory.STRING_LIST.build(getBinaryMultiBulkReply());
+	    return BuilderFactory.STRING_LIST.build(getBinaryMultiBulkReply());
     }
 
     @SuppressWarnings("unchecked")
@@ -237,9 +237,9 @@ public class Connection implements Closeable {
 
     @SuppressWarnings("unchecked")
     public List<Long> getIntegerMultiBulkReply() {
-	flush();
-	pipelinedCommands--;
-	return (List<Long>) readProtocolWithCheckingBroken();
+        flush();
+        pipelinedCommands--;
+        return (List<Long>) readProtocolWithCheckingBroken();
     }
 
     public List<Object> getAll() {
@@ -261,9 +261,9 @@ public class Connection implements Closeable {
     }
 
     public Object getOne() {
-	flush();
-	pipelinedCommands--;
-	return readProtocolWithCheckingBroken();
+        flush();
+        pipelinedCommands--;
+        return readProtocolWithCheckingBroken();
     }
 
     public boolean isBroken() {

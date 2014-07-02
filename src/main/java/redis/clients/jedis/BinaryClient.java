@@ -20,12 +20,12 @@ import static redis.clients.jedis.Protocol.toByteArray;
 
 public class BinaryClient extends Connection {
     public enum LIST_POSITION {
-	BEFORE, AFTER;
-	public final byte[] raw;
+        BEFORE, AFTER;
+        public final byte[] raw;
 
-	private LIST_POSITION() {
-	    raw = SafeEncoder.encode(name());
-	}
+        private LIST_POSITION() {
+            raw = SafeEncoder.encode(name());
+        }
     }
 
     private boolean isInMulti;
@@ -614,9 +614,8 @@ public class BinaryClient extends Connection {
 	sendCommand(ZREVRANGEBYSCORE, key, byteArrayMax, byteArrayMin);
     }
 
-    public void zrevrangeByScore(final byte[] key, final byte[] max,
-	    final byte[] min) {
-	sendCommand(ZREVRANGEBYSCORE, key, max, min);
+    public void zrevrangeByScore(final byte[] key, final byte[] max, final byte[] min) {
+	    sendCommand(ZREVRANGEBYSCORE, key, max, min);
     }
 
     public void zrevrangeByScore(final byte[] key, final String max,

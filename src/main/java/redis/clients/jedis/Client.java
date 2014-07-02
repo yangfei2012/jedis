@@ -1,6 +1,6 @@
 package redis.clients.jedis;
 
-import static redis.clients.jedis.Protocol.toByteArray;
+import redis.clients.util.SafeEncoder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import redis.clients.util.SafeEncoder;
+import static redis.clients.jedis.Protocol.toByteArray;
 
 public class Client extends BinaryClient implements Commands {
     public Client(final String host) {
-	super(host);
+	    super(host);
     }
 
     public Client(final String host, final int port) {
@@ -469,10 +469,8 @@ public class Client extends BinaryClient implements Commands {
 		toByteArray(max), offset, count);
     }
 
-    public void zrevrangeByScore(final String key, final double max,
-	    final double min) {
-	zrevrangeByScore(SafeEncoder.encode(key), toByteArray(max),
-		toByteArray(min));
+    public void zrevrangeByScore(final String key, final double max, final double min) {
+	    zrevrangeByScore(SafeEncoder.encode(key), toByteArray(max), toByteArray(min));
     }
 
     public void zrangeByScore(final String key, final String min,

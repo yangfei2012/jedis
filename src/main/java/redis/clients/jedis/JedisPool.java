@@ -26,8 +26,7 @@ public class JedisPool extends Pool<Jedis> {
             String password = uri.getUserInfo().split(":", 2)[1];
             int database = Integer.parseInt(uri.getPath().split("/", 2)[1]);
             this.internalPool = new GenericObjectPool<Jedis>(
-                new JedisFactory(h, port, Protocol.DEFAULT_TIMEOUT,
-                        password, database, null),
+                new JedisFactory(h, port, Protocol.DEFAULT_TIMEOUT, password, database, null),
                 new GenericObjectPoolConfig());
         } else {
             this.internalPool = new GenericObjectPool<Jedis>(
@@ -39,13 +38,13 @@ public class JedisPool extends Pool<Jedis> {
     }
 
     public JedisPool(final URI uri) {
-	String h = uri.getHost();
-	int port = uri.getPort();
-	String password = uri.getUserInfo().split(":", 2)[1];
-	int database = Integer.parseInt(uri.getPath().split("/", 2)[1]);
-	this.internalPool = new GenericObjectPool<Jedis>(new JedisFactory(h,
-		port, Protocol.DEFAULT_TIMEOUT, password, database, null),
-		new GenericObjectPoolConfig());
+        String h = uri.getHost();
+        int port = uri.getPort();
+        String password = uri.getUserInfo().split(":", 2)[1];
+        int database = Integer.parseInt(uri.getPath().split("/", 2)[1]);
+        this.internalPool = new GenericObjectPool<Jedis>(
+            new JedisFactory(h, port, Protocol.DEFAULT_TIMEOUT, password, database, null),
+            new GenericObjectPoolConfig());
     }
 
     public JedisPool(final GenericObjectPoolConfig poolConfig,
@@ -73,17 +72,17 @@ public class JedisPool extends Pool<Jedis> {
     }
 
     public JedisPool(final GenericObjectPoolConfig poolConfig,
-	    final String host, int port, int timeout, final String password,
-	    final int database, final String clientName) {
-	super(poolConfig, new JedisFactory(host, port, timeout, password,
-		database, clientName));
+	    final String host, int port, int timeout,
+        final String password, final int database, final String clientName) {
+	    super(poolConfig, new JedisFactory(host, port, timeout,
+                password, database, clientName));
     }
 
     @Override
     public Jedis getResource() {
-	Jedis jedis = super.getResource();
-	jedis.setDataSource(this);
-	return jedis;
+	    Jedis jedis = super.getResource();
+	    jedis.setDataSource(this);
+	    return jedis;
     }
 
     public void returnBrokenResource(final Jedis resource) {

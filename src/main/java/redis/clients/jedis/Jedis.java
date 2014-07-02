@@ -1828,18 +1828,18 @@ public class Jedis extends BinaryJedis implements JedisCommands,
      *         programming language used.
      */
     public List<String> blpop(final int timeout, final String... keys) {
-	checkIsInMulti();
-	List<String> args = new ArrayList<String>();
-	for (String arg : keys) {
-	    args.add(arg);
-	}
-	args.add(String.valueOf(timeout));
+        checkIsInMulti();
+        List<String> args = new ArrayList<String>();
+        for (String arg : keys) {
+            args.add(arg);
+        }
+        args.add(String.valueOf(timeout));
 
-	client.blpop(args.toArray(new String[args.size()]));
-	client.setTimeoutInfinite();
-	final List<String> multiBulkReply = client.getMultiBulkReply();
-	client.rollbackTimeout();
-	return multiBulkReply;
+        client.blpop(args.toArray(new String[args.size()]));
+        client.setTimeoutInfinite();
+        final List<String> multiBulkReply = client.getMultiBulkReply();
+        client.rollbackTimeout();
+        return multiBulkReply;
     }
 
     public List<String> blpop(String... args) {
@@ -2322,9 +2322,9 @@ public class Jedis extends BinaryJedis implements JedisCommands,
 
     public Set<String> zrevrangeByScore(final String key, final double max,
 	    final double min) {
-	checkIsInMulti();
-	client.zrevrangeByScore(key, max, min);
-	return new LinkedHashSet<String>(client.getMultiBulkReply());
+        checkIsInMulti();
+        client.zrevrangeByScore(key, max, min);
+        return new LinkedHashSet<String>(client.getMultiBulkReply());
     }
 
     public Set<String> zrevrangeByScore(final String key, final String max,
@@ -2855,7 +2855,7 @@ public class Jedis extends BinaryJedis implements JedisCommands,
     }
 
     private Object getEvalResult() {
-	return evalResult(client.getOne());
+	    return evalResult(client.getOne());
     }
 
     private Object evalResult(Object result) {
