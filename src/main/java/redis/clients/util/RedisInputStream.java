@@ -55,40 +55,39 @@ public class RedisInputStream extends FilterInputStream {
 
         try {
             while (true) {
-            if (count == limit) {
-                fill();
-            }
-            if (limit == -1)
-                break;
-
-            b = buf[count++];
-            if (b == '\r') {
                 if (count == limit) {
-                fill();
+                    fill();
                 }
+                if (limit == -1)
+                    break;
 
-                if (limit == -1) {
-                sb.append((char) b);
-                break;
-                }
+                b = buf[count++];
+                if (b == '\r') {
+                    if (count == limit) {
+                        fill();
+                    }
 
-                c = buf[count++];
-                if (c == '\n') {
-                break;
+                    if (limit == -1) {
+                        sb.append((char) b);
+                        break;
+                    }
+
+                    c = buf[count++];
+                    if (c == '\n') {
+                        break;
+                    }
+                    sb.append((char) b);
+                    sb.append((char) c);
+                } else {
+                    sb.append((char) b);
                 }
-                sb.append((char) b);
-                sb.append((char) c);
-            } else {
-                sb.append((char) b);
-            }
             }
         } catch (IOException e) {
             throw new JedisConnectionException(e);
         }
         String reply = sb.toString();
         if (reply.length() == 0) {
-            throw new JedisConnectionException(
-                "It seems like server has closed the connection.");
+            throw new JedisConnectionException("It seems like server has closed the connection.");
         }
         return reply;
     }
